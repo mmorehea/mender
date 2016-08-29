@@ -20,13 +20,38 @@ def messRow(mask, img):
         if count == 0:
             continue
         oldRow = img[row, :]
-        #code.interact(local=locals())
+        code.interact(local=locals())
         newRow = np.delete(oldRow, whites[0])
         while len(newRow) < len(oldRow):
             newRow = np.append(newRow, 0)
         #code.interact(local=locals())
         img[row, :] = newRow
     return img
+
+
+def findWhiteWidth(mask):
+    arr = []
+    for row in range(mask.shape[0]):
+        white = np.where(mask[row, :] == 1)
+        whiteWidth = white[0].size
+        arr.append(whiteWidth)
+    return arr
+
+def round(img):
+    arr = []
+    for column in range(widths.shape[0]):
+        num = column/3
+        if 
+            numCorrected = num
+        numCorrected = round(num,0)
+        arr.append(numCorrected)
+    return arr
+
+
+
+
+
+
 
 imgL = sorted(glob.glob('./test_em/*.tiff'))
 maskL = sorted(glob.glob('./test_mask/*.tiff'))
@@ -37,4 +62,5 @@ for ii, each in enumerate(imgL):
     img = tifffile.imread(impath)
     maskpath = maskL[ii]
     mask = tifffile.imread(maskpath)
+    widths = findWhiteWidth(mask)
     code.interact(local=locals())
