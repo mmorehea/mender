@@ -3,7 +3,7 @@ import sys
 import tifffile
 import code
 import numpy as np
-import cv2
+#import cv2
 import glob
 
 def consecutive(data, stepsize=1):
@@ -37,17 +37,18 @@ def findWhiteWidth(mask):
         arr.append(whiteWidth)
     return arr
 
-def round(img):
-    arr = []
-    for column in range(widths.shape[0]):
-        num = column/3
-        if 
-            numCorrected = num
-        numCorrected = round(num,0)
-        arr.append(numCorrected)
+def round(arr):
+    for val in range(arr.shape[0]):
+        mod = arr[val,:]
+        num = mod % 3
+        if num == 0:
+            newnum = mod
+        if num == 1:
+            newnum = mod + 1
+        if num == 2:
+            newnum = mod - 1
+        arr.append(newnum)
     return arr
-
-
 
 
 
@@ -63,4 +64,7 @@ for ii, each in enumerate(imgL):
     maskpath = maskL[ii]
     mask = tifffile.imread(maskpath)
     widths = findWhiteWidth(mask)
+
     code.interact(local=locals())
+
+print widths
