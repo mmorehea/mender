@@ -37,34 +37,34 @@ def findWhiteWidth(mask):
         arr.append(whiteWidth)
     return arr
 
-def round(arr):
-    for val in range(arr.shape[0]):
-        mod = arr[val,:]
-        num = mod % 3
-        if num == 0:
-            newnum = mod
-        if num == 1:
-            newnum = mod + 1
-        if num == 2:
-            newnum = mod - 1
-        arr.append(newnum)
+#def threes(arr):
+#   for val in range(arr)
+#      mod = arr[val,:]
+#        num = mod % 3
+#       if num == 0:
+#            newnum = mod
+#        if num == 1:
+#            newnum = mod + 1
+#        if num == 2:
+#            newnum = mod - 1
+#        arr.append(newnum)
+#    return arr
+
+def findMin(arr):
+    minVal = min(arr)
     return arr
-
-
-
 
 
 imgL = sorted(glob.glob('./test_em/*.tiff'))
 maskL = sorted(glob.glob('./test_mask/*.tiff'))
 #code.interact(local=locals())
 for ii, each in enumerate(imgL):
-    print ii
+    print (ii)
     impath = imgL[ii]
     img = tifffile.imread(impath)
     maskpath = maskL[ii]
     mask = tifffile.imread(maskpath)
     widths = findWhiteWidth(mask)
-
+    minVal = findMin(widths)
+ #   roundWidths = threes(widths)
     code.interact(local=locals())
-
-print widths
