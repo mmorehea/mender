@@ -100,5 +100,5 @@ for ii, each in enumerate(imgL):
 	gap  = findMin(widths)
 	firstWhite = findFirst(mask)
 	indicies = preShift(firstWhite, gap)
-#	mendImg = shift(gap, mask, img, firstWhite)
+	mendImg = shift(mask, img, indicies)
 	code.interact(local=locals())
