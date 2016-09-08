@@ -44,6 +44,7 @@ def findFirst(mask):
 		white = np.where(mask[row, :] == 1)
 		count = white[0].size
 		if count == 0:
+			firsts.append(-1)
 			continue
 		first = white[0][0]
 		firsts.append(first)
@@ -51,35 +52,43 @@ def findFirst(mask):
 
 
 def findMin(arr):
-	arr.sort()
-	gap = arr[-1]
+	std = np.std(arr)
+	mean = np.mean(arr)
+	gap = int(mean)
 	return gap
 
-def preShift(firstWhite, gap):
-	array1 = []
-	array2 = []
-	for x in range(len(firstWhite)):
-		first = firstWhite[x]
-		z = 0
-		for y in range(gap):
-			array1.append(first+z)
-			z = z+1
-	return array1
+def shift(mask, img, firstWhite, gap):
+	for each in firstWhite:
+		if each != -1:
+			lastWhite = each
+			break
 
-
-def shift(mask, img, indicies):
-
-	z = 0
+	add = np.zeros(gap, dtype=np.int)
+	newImg = []
 	for row in range(mask.shape[0]):
 		oldRow = img[row, :]
+		if firstWhite[row] != -1:
+			lastWhite = firstWhite[row]
+			indexesToDelete = range(firstWhite[row], firstWhite[row]+gap)
+			cutRow = np.delete(oldRow, indexesToDelete)
+			newRow = np.append(cutRow,add)
+			if row == 0:
+				newImg = newRow
+			if row != 0:
+				newImg = np.vstack((newImg, newRow))
+		else:
+			indexesToDelete = range(lastWhite, lastWhite+gap)
+			cutRow = np.delete(oldRow, indexesToDelete)
+			newRow = np.append(cutRow,add)
+			if row == 0:
+				newImg = newRow
+			if row != 0:
+				newImg = np.vstack((newImg, newRow))
 
-		for x in range(30):
-			newRow = np.delete(oldRow, indicies[z])
-			oldRow = newRow
-			z = z + 1
-		code.interact(local=locals())
-		img[row, :] = newRow
-	return img
+
+
+	#code.interact(local=locals())
+	return newImg
 
 
 
@@ -99,6 +108,7 @@ for ii, each in enumerate(imgL):
 	widths = findWhiteWidth(mask)
 	gap  = findMin(widths)
 	firstWhite = findFirst(mask)
-	indicies = preShift(firstWhite, gap)
-	mendImg = shift(mask, img, indicies)
-	code.interact(local=locals())
+	mendImg = shift(mask, img, firstWhite, gap)
+	cv2.imwrite("output/" + each.split('/')[-1], mendImg)
+
+code.interact(local=locals())
