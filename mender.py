@@ -5,6 +5,7 @@ import code
 import numpy as np
 import cv2
 import glob
+import time
 
 def consecutive(data, stepsize=1):
     return np.split(data, np.where(np.diff(data) != stepsize)[0]+1)
@@ -52,9 +53,11 @@ def findFirst(mask):
 
 
 def findMin(arr):
+	arr = filter(lambda a: a != 0, arr)
 	std = np.std(arr)
 	mean = np.mean(arr)
-	gap = int(mean)
+	gap = int(mean + 2*std)
+	#code.interact(local=locals())
 	return gap
 
 def shift(mask, img, firstWhite, gap):
@@ -90,16 +93,23 @@ def shift(mask, img, firstWhite, gap):
 	#code.interact(local=locals())
 	return newImg
 
+start = time.time()
 
 
 
+imgs = sys.argv[1]
+mask = sys.argv[2]
+output = sys.argv[3]
 
-
-
-imgL = sorted(glob.glob('./test_em/*.tiff'))
-maskL = sorted(glob.glob('./test_mask/*.tiff'))
+imgL = sorted(glob.glob(imgs + '*.tiff'))
+maskL = sorted(glob.glob(mask + '*.tiff'))
+outputCount = sorted(glob.glob(output + '*.tiff'))
 #code.interact(local=locals())
 for ii, each in enumerate(imgL):
+	if ii < len(outputCount):
+		continue
+	end = time.time()
+	print(end - start)
 	print (ii)
 	impath = imgL[ii]
 	img = tifffile.imread(impath)
@@ -109,6 +119,6 @@ for ii, each in enumerate(imgL):
 	gap  = findMin(widths)
 	firstWhite = findFirst(mask)
 	mendImg = shift(mask, img, firstWhite, gap)
-	cv2.imwrite("output/" + each.split('/')[-1], mendImg)
+	cv2.imwrite(output + each.split('/')[-1], mendImg)
 
 code.interact(local=locals())
